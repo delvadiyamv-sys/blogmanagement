@@ -1,0 +1,101 @@
+<%- include("../parcials/adminheader.ejs")%>
+  <div id="content" class="p-4 p-md-5 pt-5">
+    <h2 class="mb-4">Dashboard</h2>
+    <div>
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>Title</th>
+              <th>Content</th>
+              <th>Image</th>
+              <th>Edit</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (newPost && newPost.length> 0) {
+              for (let i = 0; i < newPost.length; i++) { %>
+                <tr class="" style="width: max-content;">
+                  <td>
+                    <%= i + 1 %>
+                  </td>
+                  <td>
+                    <%= newPost[i].title %>
+                  </td>
+                  <td>
+                    <%= newPost[i].content %>
+                  </td>
+                  <td><img src="/uploads/<%= newPost[i].image %>" alt="" class="img-fluid"
+                      style="max-width: 100px; height: 50px;" /></td>
+                  <td>
+                    <form method="" action="/editpost/<%= newPost[i].id %>" class="deleteform">
+                      <input type="hidden" name="id" value="<%= newPost[i].id %>">
+                      <button type="submit" class="btn btn-primary editpost">Edit</button>
+                    </form>
+                    
+                  </td>
+                  <td>
+                    <form method="POST" action="/delete" class="deleteform">
+                      <input type="hidden" name="id" value="<%= newPost[i].id %>">
+                      <button type="submit" class="btn btn-danger deletepost">Delete</button>
+                    </form>
+                  </td>
+                </tr>
+                <% } } else { %>
+                  <tr>
+                    <td><img class="img-fluid rounded mb-4 mb-lg-0" src="https://dummyimage.com/600x400/000/fff"
+                        alt="..." /></td>
+                    <td colspan="5" class="text-center">No posts found</td>
+                  </tr>
+                  <% } %>
+          </tbody>
+        </table>
+      
+
+        <p class="alert-success"  style="color: green;">
+          
+
+        </p>
+         <% if(typeof message!=="undefined" ){ %>
+      <p class ="alert"style="color: green">
+        <%=message %>
+      </p>
+      <% } %>
+
+            <script>
+              // Function to handle delete button click
+              //function to submit form data
+              $(document).on('click', '.deletepost', function() {
+                var form = $(this).closest('form');
+                var postId = form.find('input[name="id"]').val();
+
+                $.ajax({
+                  url: '/delete',
+                  type: 'POST',
+                  data: { id: postId },
+                  success: function(response) {
+                    if (response.success === true) {
+                      // Remove the corresponding table row
+                      form.closest('tr').remove();
+                      // Show success message
+                      if (response.message !== undefined) {
+                        $('.alert-success').text(response.message).fadeIn().delay(3000).fadeOut();
+                      }
+                    } else {
+                      alert('Failed to delete the post.');
+                    }
+                  },
+
+                  error: function(xhr, status, error) {
+                    // Handle error response
+                    alert('An error occurred while deleting the post.');
+                  }
+
+                });
+              });
+
+            </script>
+
+            <%- include("../parcials/adminfooter.ejs")%>

@@ -1,0 +1,47 @@
+    
+<%- include("../parcials/adminheader.ejs")%>
+
+
+
+  <div id="content" class="p-4 p-md-5 pt-5">
+    <h1>Edit Post</h1>
+    <form action="/updatepost/<%= post.id %>" method="POST"  class="editpost" enctype="multipart/form-data">
+      <div class="mb-3">
+        <input type="hidden" name="id" value="<%= post.id %>">
+        <label for="exampleFormControlInput1" class="form-label">Title</label>
+        <input type="text" class=" w-100" id="exampleFormControlInput1" placeholder="Enter post-title" name="title"
+          value="<%= post.title %>" required>
+      </div>
+      <div class="mb-3">
+        <label for="exampleFormControlTextarea1" class="form-label">Content</label>
+        <textarea class="form w-100" id="exampleFormControlTextarea1" placeholder="Enter post content" rows="3"
+          name="content" required><%= post.content %></textarea>
+      </div>
+      <div>
+        <label for="formFile" class="form-label">Upload Image</label>
+        <input class="form-control" type="file" id="formFile" name="image" >
+        <% if(post.image){ %>
+          <img src="/uploads/<%= post.image %>" alt="" class="img-fluid mt-2" style="max-width: 150px; height: 100px;">
+        <% } %>
+        
+      </div>
+        
+      <button type="submit" class="btn btn-primary mt-3">Update Post</button>
+
+    </form>
+      
+    </div>
+
+   
+
+  </div>
+    <% if(typeof message!=="undefined" ){ %>
+      <p class ="alert"style="color: green">
+        <%=message %>
+      </p>
+      <% } %>
+
+  <script>
+   
+  </script>
+     <%- include("../parcials/adminfooter.ejs")%>

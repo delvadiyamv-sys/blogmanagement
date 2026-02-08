@@ -1,0 +1,169 @@
+<%-include("./parcials/header.ejs") %>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Post content-->
+                <article>
+                    <!-- Post header-->
+                    <header class="mb-4">
+                        <!-- Post title-->
+                        <h1 class="fw-bolder mb-1">
+                            <%= post.title %>
+                        </h1>
+                        <!-- Post meta content-->
+                        <div class="text-muted fst-italic mb-2"></div>
+                        <!-- Post categories-->
+                        <a class="badge bg-secondary text-decoration-none link-light" href="#!">Web Design</a>
+                        <a class="badge bg-secondary text-decoration-none link-light" href="#!">Freebies</a>
+                        <b id="viewsCount" class="ms-3  text-decoration-none">
+                          <% if(post.Views){ %>
+                            Views: <%= post.Views+1 %>
+                            <% } else { %>
+                                Views: 1
+                                <% } %>
+                        </b>
+                    </header>
+                    <!-- Preview image figure-->
+                    <figure class="mb-4">
+                        <% if(post.image) { %>
+                            <img class= "img-fluid rounded mb-4 mb-lg-0" src="/uploads/<%= post.image %>" alt="..." />
+                            <% }
+                             else{ %>
+                                <img class="img-fluid rounded mb-4 mb-lg-0"
+                                    src="https://dummyimage.com/900x400/ced4da/6c757d.jpg" alt="..." />
+                                <% } %>
+                    </figure>
+                    <!-- Post content-->
+                    <section class="mb-5">
+                        <p class="fs-5 mb-4">
+                            <%= post.content %>
+                        </p>
+
+                    </section>
+                    <!-- views/posts.ejs -->
+
+ 
+  <div class="post">
+    <button class="like-button btn btn-success me-2" data-id="<%= post._id %>">
+      Like (<span class="like-count"><%= post.likes %></span>)
+    </button>
+    <button class="dislike-button btn btn-danger" data-id="<%= post._id %>">
+      Dislike (<span class="dislike-count"><%= post.dislikes %></span>)
+    </button>
+  </div>
+    <script>
+  $(function() {
+    $('.like-button').click(function() {
+        console.log('Like button clicked');
+      const postId = $(this).data('id');
+      $.post('/like', { postId: postId }, function(data) {
+        $('.like-count').text(data.likes);
+      });
+    });
+
+    $('.dislike-button').click(function() {
+      const postId = $(this).data('id');
+      $.post('/dislike', { postId: postId }, function(data) {
+        $('.dislike-count').text(data.dislikes);
+      });
+    });
+  });
+
+
+</script>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="/js/like-dislike.js"></script>
+
+                </article>
+                <!-- Comments section-->
+                <section class="mb-5">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <!-- Comment form-->
+                            <h2 class="h4 my-4">Leave a Comment</h2>
+                            <form class="mb-4"><textarea class="form-control" rows="3" name="comment" required
+                                    placeholder="Join the discussion and leave a comment!"></textarea>
+                                <input type="hidden" class="form-control my-4" name="postId" required
+                                    value="<%= post._id %>">
+                                <input type="text" class="form-control my-4" name="name" value="" required
+                                    placeholder="Your Name" />
+                                <input type="email" class="form-control my-4" name="email" value="" required
+                                    placeholder="Your Email" />
+                                <button class="btn btn-primary" type="submit">Post Comment</button>
+                            </form>
+                            <p class="comments-message" style="color: aqua;"></p>
+                            <!-- Comment with nested comments-->
+
+                            <!-- Single comment-->
+                            <h2 class="h4">Comments</h2>
+                            <% if(post.comments.length>=0) { %>
+                                <% post.comments.forEach(comment=> { %>
+                                    <div class="d-flex my-4">
+                                        <div class="flex-shrink-0"><img class="rounded-circle"
+                                                src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                                        <div class="ms-3">
+                                            <div class="fw-bold">
+                                                <%= comment.name %>
+                                            </div>
+                                            <%= comment.comment %>
+                                        </div>
+                                    </div>
+                                    <% }) %>
+                                        <% } else { %>
+                                            <p>No comments yet.</p>
+                                            <% } %>
+
+
+
+                        </div>
+                    </div>
+            </div>
+        </div>
+        </section>
+    </div>
+    <!-- Side widgets-->
+    <div class="col-lg-4">
+        <!-- Search widget-->
+        <div class="card mb-4">
+            <div class="card-header">Search</div>
+            <div class="card-body">
+                <div class="input-group">
+                    <input class="form-control" type="text" placeholder="Enter search term..."
+                        aria-label="Enter search term..." aria-describedby="button-search" />
+                    <button class="btn btn-primary" id="button-search" type="button">Go!</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+    </div>
+    <script>
+        $('form').submit(function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: "post",
+                url: "/comment",
+                data: $('form').serialize(),
+                success: function (res) {
+                    if (res.status) {
+                        $('.comments-message').text(res.message).fadeIn().delay(2000).fadeOut();
+                    } else {
+                        $('.comments-message').text(res.message).fadeIn().delay(2000).fadeOut();
+                    }
+                }
+            })
+        })
+        var socket = io();
+        var postId = "<%= post._id %>";
+        socket.emit('updateViews', postId);
+        socket.on('viewsUpdated', function (data) {
+            if (data.postId === postId) {
+                $('#viewsCount').text('Views: ' + data.Views);
+            }
+        });
+    </script>
+
+
+    <%-include("./parcials/footer.ejs") %>

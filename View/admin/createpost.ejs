@@ -1,0 +1,63 @@
+<%- include("../parcials/adminheader.ejs")%>
+  <div id="content" class="p-4 p-md-5 pt-5">
+    <h1>Create Post</h1>
+    <form action="/post" method="POST" id="addPost" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label for="exampleFormControlInput1" class="form-label">Title</label>
+        <input type="text" class=" w-100" id="exampleFormControlInput1" placeholder="Enter post-title" name="title"
+          required>
+      </div>
+      <div class="mb-3">
+        <label for="exampleFormControlTextarea1" class="form-label">Content</label>
+        <textarea class="form w-100" id="exampleFormControlTextarea1" placeholder="Enter post content" rows="3"
+          name="content" required></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="exampleFormControlInput1" class="form-label">Image</label>
+        <input type="file" class=" w-100" id="exampleFormControlInput1" name="image" >
+      </div>
+      <button type="submit" class="btn btn-primary mt-3">Create Post</button>
+
+    </form>
+      
+    </div>
+
+    <% if(typeof message!=="undefined" ){ %>
+      <p class ="alert"style="color: green">
+        <%=message %>
+      </p>
+      <% } %>
+
+  </div>
+
+  <script>
+    
+    document.getElementById('addPost').addEventListener('submit', async function (e) {
+      e.preventDefault(); // Prevent the default form submission
+      const form = e.target;
+      const formData = new FormData(form); // Create a FormData object from the form
+      try {
+        const response = await fetch('/post', {
+          method: 'POST',
+          body: formData
+        });
+        const result = await response.json();
+        if (result.success) {
+          alert(result.message);
+          console.log('New Post ID:', result._id); // Log the new post ID
+          var socket = io();
+          socket.emit('newPost', { postId: result._id,title:result.title,content:result.content,
+            image:result.image
+           }); // Emit the new post event
+          form.reset(); // Reset the form after successful submission
+        } else {
+          alert('Error: ' + result.message);
+        }
+      } catch (error) {
+        console.error('Error submitting form:', error);
+        alert('An error occurred while submitting the form.');
+      }
+    });
+   
+      </script>
+  <%- include("../parcials/adminfooter.ejs")%>

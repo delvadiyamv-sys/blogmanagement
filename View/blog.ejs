@@ -1,0 +1,91 @@
+<%-include("./parcials/header.ejs") %>
+
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#!">Techno_infoSys</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#!">About_us</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#!">Contact_us</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
+
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <% if( newPost.length> 0){
+        for(let i =(newPost.length - 1); i >= 0; i--){ %>
+            <div class="container px-4 px-lg-5" id="runpost">
+                <!-- Heading Row-->
+                <div class="row gx-4 gx-lg-5 align-items-center my-5">
+                    <div class="col-lg-5">
+                       <% if(newPost[i].image ) { %>
+
+                        <img class="img-fluid rounded mb-4 mb-lg-0"
+                            src="<%= newPost[i].image %>" alt="..." /></div>
+                    <% }
+                    else { %>
+                        <img class="img-fluid rounded mb-4 mb-lg-0"
+                            src="https://dummyimage.com/600x400/000/fff" alt="..." /></div>
+                    <% } %>
+                    <div class="col-lg-7">
+                        <h1 class="font-weight-light">
+                            <%= newPost[i].title %>
+                        </h1>
+                        <p>
+                            <%= newPost[i].content %>
+                        </p>
+                        <a class="btn btn-primary" href="/post/<%= newPost[i]._id %>">Read more</a>
+                    </div>
+                </div>
+            </div>
+            <% } } else { %>
+                <h1>No posts available</h1>
+                <% } %>
+
+  <script>
+    var socket = io();
+    socket.on('newPost', function(data) {
+        console.log('New post received:', data);
+        var imageSrc = data.image ? data.image : 'https://dummyimage.com/600x400/000/fff';
+        var html = ``;
+           html+= `
+        <div class="container px-4 px-lg-5" id="runpost">
+                <!-- Heading Row-->
+                <div class="row gx-4 gx-lg-5 align-items-center my-5            
+                ">
+                    <div class="col-lg-5">
+                        <img class="img-fluid rounded mb-4 mb-lg-0"
+                            src="` + imageSrc + `" alt="..." /></div>
+                    <div class="col-lg-7">
+                        <h1 class="font-weight-light">
+                            ` + data.title + `
+                        </h1>
+                        <p>
+                            ` + data.content + `
+                        </p>
+                        <a class="btn btn-primary" href="/post/` + data.postId + `">Read more</a>
+                    </div>
+                </div>
+            </div>
+        `
+        $('#runpost').prepend(html);
+    });
+ 
+    
+            
+    
+
+       
+    
+</script>   
+
+                    <%-include('./parcials/footer.ejs') %>
