@@ -16,19 +16,18 @@
                         <a class="badge bg-secondary text-decoration-none link-light" href="#!">Web Design</a>
                         <a class="badge bg-secondary text-decoration-none link-light" href="#!">Freebies</a>
                         <b id="viewsCount" class="ms-3  text-decoration-none">
-                          <% if(post.Views){ %>
-                            Views: <%= post.Views+1 %>
-                            <% } else { %>
-                                Views: 1
-                                <% } %>
+                            <% if(post.Views){ %>
+                                Views: <%= post.Views+1 %>
+                                    <% } else { %>
+                                        Views: 1
+                                        <% } %>
                         </b>
                     </header>
                     <!-- Preview image figure-->
                     <figure class="mb-4">
                         <% if(post.image) { %>
-                            <img class= "img-fluid rounded mb-4 mb-lg-0" src="/uploads/<%= post.image %>" alt="..." />
-                            <% }
-                             else{ %>
+                            <img class="img-fluid rounded mb-4 mb-lg-0" src="/uploads/<%= post.image %>" alt="..." />
+                            <% } else{ %>
                                 <img class="img-fluid rounded mb-4 mb-lg-0"
                                     src="https://dummyimage.com/900x400/ced4da/6c757d.jpg" alt="..." />
                                 <% } %>
@@ -42,38 +41,14 @@
                     </section>
                     <!-- views/posts.ejs -->
 
- 
-  <div class="post">
-    <button class="like-button btn btn-success me-2" data-id="<%= post._id %>">
-      Like (<span class="like-count"><%= post.likes %></span>)
-    </button>
-    <button class="dislike-button btn btn-danger" data-id="<%= post._id %>">
-      Dislike (<span class="dislike-count"><%= post.dislikes %></span>)
-    </button>
-  </div>
-    <script>
-  $(function() {
-    $('.like-button').click(function() {
-        console.log('Like button clicked');
-      const postId = $(this).data('id');
-      $.post('/like', { postId: postId }, function(data) {
-        $('.like-count').text(data.likes);
-      });
-    });
-
-    $('.dislike-button').click(function() {
-      const postId = $(this).data('id');
-      $.post('/dislike', { postId: postId }, function(data) {
-        $('.dislike-count').text(data.dislikes);
-      });
-    });
-  });
 
 
-</script>
 
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="/js/like-dislike.js"></script>
+
+                    </script>
+
+                    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+                    <script src="/js/like-dislike.js"></script>
 
                 </article>
                 <!-- Comments section-->
@@ -99,7 +74,7 @@
                             <h2 class="h4">Comments</h2>
                             <% if(post.comments.length>=0) { %>
                                 <% post.comments.forEach(comment=> { %>
-                                    <div class="d-flex my-4">
+                                    <div class="d-flex my-4" id="cardbody">
                                         <div class="flex-shrink-0"><img class="rounded-circle"
                                                 src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
                                         <div class="ms-3">
@@ -120,6 +95,7 @@
                     </div>
             </div>
         </div>
+        
         </section>
     </div>
     <!-- Side widgets-->
@@ -142,16 +118,22 @@
     <script>
         $('form').submit(function (e) {
             e.preventDefault();
+            
+            var socket = io();
+            var postId = "<%= post._id %>";
+
             $.ajax({
                 type: "post",
                 url: "/comment",
                 data: $('form').serialize(),
                 success: function (res) {
                     if (res.status) {
+                        socket.emit('commentAdded', res.data);
                         $('.comments-message').text(res.message).fadeIn().delay(2000).fadeOut();
                     } else {
                         $('.comments-message').text(res.message).fadeIn().delay(2000).fadeOut();
                     }
+
                 }
             })
         })
@@ -161,6 +143,21 @@
         socket.on('viewsUpdated', function (data) {
             if (data.postId === postId) {
                 $('#viewsCount').text('Views: ' + data.Views);
+            }
+        });
+        var socket = io();
+        socket.on('commentAdded', function (data) {
+            if (data.postId === postId) {
+                var commentHtml = `
+                    <div class="d-flex my-4">
+                        <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                        <div class="ms-3">
+                            <div class="fw-bold">${data.name}</div>
+                            ${data.comment}
+                        </div>
+                    </div>
+                `;
+                $('#cardbody').prepend(commentHtml);
             }
         });
     </script>

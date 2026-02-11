@@ -44,8 +44,19 @@ io.on('connection', (socket) => {
     var data = await post.findOneAndUpdate({ _id: postId }, { $inc: { Views: 1 } }, { new: true });
     io.emit('viewsUpdated', { postId: postId, Views: data.Views  });  
   }); 
+   socket.on('commentAdded', async (commentData) => {
+    console.log('New comment added:', commentData);
+    const { postId, name, email, comment } = commentData;
+    try {
+      await post.findByIdAndUpdate(postId, { $push: { "comments": { name, email, comment } } });
+      io.emit('commentAdded', { postId, name, email, comment });
+    } catch (error) {
+      console.error('Error adding comment:', error);
+    }
+  });
   
 }); 
+
   
 http.listen(3000, () => {
   console.log('my new blog node Server is running on http://localhost:3000');
