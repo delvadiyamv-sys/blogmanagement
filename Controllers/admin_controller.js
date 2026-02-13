@@ -29,14 +29,15 @@ class AdminController {
   static async addComment(req, res) {
     // Get comment data from request body
     const { name, email, comment, postId } = req.body;
+    
     try {
       // Here you would typically save the comment to the database
       await Post.findByIdAndUpdate(postId, { $push: { "comments": { name, email, comment } } });
       console.log('New comment added:', { name, email, comment, postId });
-      res.status(201).json({ message: 'Comment added successfully' });
+      res.status(201).json({success: true, message: 'Comment added successfully',postId:postId, name, email, comment });
     } catch (error) {
       console.error('Error adding comment:', error);
-      res.status(500).json({ message: 'Internal Server Error' });
+      res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
   }
   static async dashboard(req, res) {

@@ -72,22 +72,25 @@
 
                             <!-- Single comment-->
                             <h2 class="h4">Comments</h2>
-                            <% if(post.comments.length>=0) { %>
-                                <% post.comments.forEach(comment=> { %>
-                                    <div class="d-flex my-4" id="cardbody">
-                                        <div class="flex-shrink-0"><img class="rounded-circle"
-                                                src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                                        <div class="ms-3">
-                                            <div class="fw-bold">
-                                                <%= comment.name %>
+                            <div class="comment-card">
+                                <% if(post.comments.length>=0) { %>
+                                    <% post.comments.forEach(comment=> { %>
+                                        <div class="d-flex my-4" id="">
+                                            <div class="flex-shrink-0"><img class="rounded-circle"
+                                                    src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." />
                                             </div>
-                                            <%= comment.comment %>
+                                            <div class="ms-3">
+                                                <div class="fw-bold">
+                                                    <%= comment.name %>
+                                                </div>
+                                                <%= comment.comment %>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <% }) %>
-                                        <% } else { %>
-                                            <p>No comments yet.</p>
-                                            <% } %>
+                                        <% }) %>
+                                            <% } else { %>
+                                                <p>No comments yet.</p>
+                                                <% } %>
+                            </div>
 
 
 
@@ -95,7 +98,7 @@
                     </div>
             </div>
         </div>
-        
+
         </section>
     </div>
     <!-- Side widgets-->
@@ -116,48 +119,76 @@
     </div>
     </div>
     <script>
+        var socket = io();
+        var postId = "<%= post._id %>";
         $('form').submit(function (e) {
             e.preventDefault();
-            
-            var socket = io();
-            var postId = "<%= post._id %>";
+            var formData = {}
+            $.each($(this).serializeArray(), function (i, field) {
+                formData[field.name] = field.value;
+            });
+
 
             $.ajax({
                 type: "post",
                 url: "/comment",
-                data: $('form').serialize(),
+                data: formData,
                 success: function (res) {
-                    if (res.status) {
-                        socket.emit('commentAdded', res.data);
+                    if (res.success) {
+                        //formData.commentId = res.postId;
+                        socket.emit('commentAdded', formData);
                         $('.comments-message').text(res.message).fadeIn().delay(2000).fadeOut();
                     } else {
                         $('.comments-message').text(res.message).fadeIn().delay(2000).fadeOut();
                     }
-
                 }
-            })
+            });
+
         })
+
+    </script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
         var socket = io();
         var postId = "<%= post._id %>";
         socket.emit('updateViews', postId);
         socket.on('viewsUpdated', function (data) {
             if (data.postId === postId) {
-                $('#viewsCount').text('Views: ' + data.Views);
+                $('#viewsCount').text('Views: ' + data.views);
+            }
+        });
+    </script>
+    <script>
+        var socket = io();
+        var postId = "<%= post._id %>";
+        socket.on('commentAdded', function (data) {
+            console.log('New comment added to post:', data.postId);
+        });
+        //var socket = io();
+        var postId = "<%= post._id %>";
+        socket.emit('updateViews', postId);
+        socket.on('viewsUpdated', function (data) {
+            if (data.postId === postId) {
+                $('#viewsCount').text('Views: ' + data.views);
             }
         });
         var socket = io();
         socket.on('commentAdded', function (data) {
             if (data.postId === postId) {
-                var commentHtml = `
+                console.log(' the New comment added to post:', data.postId);
+                // Optionally, you can implement logic here to update the comments section in real-time
+                var html = '';
+                html += `
                     <div class="d-flex my-4">
                         <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+
                         <div class="ms-3">
-                            <div class="fw-bold">${data.name}</div>
-                            ${data.comment}
+                            <div class="fw-bold">`+ data.name + `</div>
+                            `+ data.comment + `
                         </div>
                     </div>
                 `;
-                $('#cardbody').prepend(commentHtml);
+                $('.comment-card').prepend(html);
             }
         });
     </script>
