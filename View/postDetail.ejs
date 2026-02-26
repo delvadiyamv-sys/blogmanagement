@@ -17,9 +17,9 @@
                         <a class="badge bg-secondary text-decoration-none link-light" href="#!">Freebies</a>
                         <b id="viewsCount" class="ms-3  text-decoration-none">
                             <% if(post.Views){ %>
-                                Views: <%= post.Views+1 %>
+                                Views: <%= post.Views %>
                                     <% } else { %>
-                                        Views: 1
+                                        Views: 0
                                         <% } %>
                         </b>
                     </header>
@@ -150,11 +150,11 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
         var socket = io();
-        var postId = "<%= post._id %>";
+        //var postId = "<%= post._id %>";
         socket.emit('updateViews', postId);
         socket.on('viewsUpdated', function (data) {
-            if (data.postId === postId) {
-                $('#viewsCount').text('Views: ' + data.views);
+            if (postId === data.postId) {
+                $('#viewsCount').text('Views: ' + data.Views);
             }
         });
     </script>
@@ -165,11 +165,11 @@
             console.log('New comment added to post:', data.postId);
         });
         //var socket = io();
-        var postId = "<%= post._id %>";
+        //var postId = "<%= post._id %>";
         socket.emit('updateViews', postId);
         socket.on('viewsUpdated', function (data) {
-            if (data.postId === postId) {
-                $('#viewsCount').text('Views: ' + data.views);
+            if (data.postId == postId) {
+                $('#viewsCount').text('Views: ' + data.Views);
             }
         });
         var socket = io();
