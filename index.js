@@ -2,15 +2,10 @@ const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
 const post = require('./Models/adminPost');
-var { Server } = require('socket.io');
+//var { Server } = require('socket.io');
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
-var io = new Server(http, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"]
-  }
-});
+var io = require('socket.io')(http) ;
 
 
 
@@ -26,30 +21,35 @@ const mongoose = require('mongoose');
 mongoose.connect('mongodb+srv://delvadiyamv:mvd246@blogdata.d2h8lsr.mongodb.net/?retryWrites=true&w=majority&appName=blogdata', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
-const { objectID } = require('mongodb');
+//const { objectID } = require('mongodb');
 
 app.use('/', adminRouter);
 app.use('/', userRouter);
 
 io.on('connection', (socket) => {
   console.log('A user connected:', socket.id);
+  socket.on('disconnect', () => {
+      console.log('user disconnected');
+    });
   socket.on('newPost', (data) => {
     console.log('New post created:', data);
     socket.broadcast.emit('newPost', data);
     //io.emit('newPost', data); 
 
   });
-  socket.on('updateViews', async (postId) => {
-    console.log('Post viewed:', postId);
-    var data = await post.findOneAndUpdate({ _id: postId }, { $inc: { Views: 1 } }, { new: true });
-    socket.broadcast.emit('viewsUpdated', data);
-  });
+  
   socket.on('commentAdded', function (commentData) {
     io.emit('commentAdded', commentData);
     console.log('New comment added:', commentData);
   });
-
+ 
+socket.on('updateViews', async (postId) => {
+    console.log('Post viewed:', postId);
+    var data = await post.findOneAndUpdate({ _id: postId }, { $inc: { Views: 1 } }, { new: true });
+    socket.broadcast.emit('viewsUpdated', data);
+  });
 });
+
 
 
 http.listen(3000, () => {

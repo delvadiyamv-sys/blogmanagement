@@ -15,7 +15,7 @@
                         <!-- Post categories-->
                         <a class="badge bg-secondary text-decoration-none link-light" href="#!">Web Design</a>
                         <a class="badge bg-secondary text-decoration-none link-light" href="#!">Freebies</a>
-                        <b id="viewsCount" class="ms-3  text-decoration-none">
+                        <b id="viewsCount">
                             <% if(post.Views){ %>
                                 Views: <%= post.Views %>
                                     <% } else { %>
@@ -146,47 +146,45 @@
 
         })
 
-    </script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        var socket = io();
+
+
+
+        //var socket = io();
         //var postId = "<%= post._id %>";
         socket.emit('updateViews', postId);
         socket.on('viewsUpdated', function (data) {
             if (postId === data.postId) {
+                console.log('Views updated for post:', data.postId, 'New views count:', data.Views);
                 $('#viewsCount').text('Views: ' + data.Views);
             }
         });
-    </script>
-    <script>
-        var socket = io();
+
+
+        //var socket = io();
         var postId = "<%= post._id %>";
         socket.on('commentAdded', function (data) {
             console.log('New comment added to post:', data.postId);
         });
         //var socket = io();
         //var postId = "<%= post._id %>";
-        socket.emit('updateViews', postId);
-        socket.on('viewsUpdated', function (data) {
-            if (data.postId == postId) {
-                $('#viewsCount').text('Views: ' + data.Views);
-            }
-        });
-        var socket = io();
+
+
+        //var socket = io();
         socket.on('commentAdded', function (data) {
             if (data.postId === postId) {
                 console.log(' the New comment added to post:', data.postId);
                 // Optionally, you can implement logic here to update the comments section in real-time
                 var html = '';
                 html += `
-                    <div class="d-flex my-4">
-                        <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                <div class="d-flex my-4">
+                    <div class="flex-shrink-0"><img class="rounded-circle"
+                            src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
 
-                        <div class="ms-3">
-                            <div class="fw-bold">`+ data.name + `</div>
-                            `+ data.comment + `
-                        </div>
+                    <div class="ms-3">
+                        <div class="fw-bold">`+ data.name + `</div>
+                        `+ data.comment + `
                     </div>
+                </div>
                 `;
                 $('.comment-card').prepend(html);
             }
