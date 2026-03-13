@@ -1,14 +1,39 @@
 const express = require('express');
-const User = require('../Models/usermodel'); // Import the User model
+const User = require('../Models/userModel'); // Import the User model
 class UserController {
   static login(req, res) {
     //
     res.render('login'); // Render the login view
   }
+
+  static async registerUser(req, res) {
+    
+    
+     const  {name, email, password}  = req.body;
+    try {
+      const existingUser = await User.findOne({ email: email }); // Check if user with the same email already exists
+      if (existingUser) {
+        res.render('register', { message: 'Email already exists' }); // Render registration with error if email already exists
+      } else {
+        const newUser = new User({ name, email, password }); // Create a new user instance
+        await newUser.save(); // Save the new user to the database
+        res.redirect('/login'); // Redirect to login page after successful registration
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Server error');
+    }
+   
+};
+  
+  static async register(req, res) {
+    res.render('register'); // Render the registration view
+  }
   //login user
   static async loginUser(req, res) {
     const email = req.body.email; // Get email and password from request body
     const password = req.body.password;
+    console.log("action is login");
     try {
       const user = await User.findOne({ email: email, password: password }); // Find user by email and password
       if (user) {

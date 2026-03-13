@@ -1,46 +1,36 @@
 <%-include("./parcials/header.ejs") %>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-      <a class="navbar-brand" href="#!">Techno_info</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
-          class="navbar-toggler-icon"></span></button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-          <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
-          <li class="nav-item"><a class="nav-link" href="#!">Contact</a></li>
-          <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
-
-        </ul>
-      </div>
-    </div>
-  </nav>
-  <div class="container" style="width: 50%;">
-    <div class="row ">
-      <div class="col-md-12 sm-12 lg-12 col-12">
-        <form action="/login" method="POST">
-          <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="text" id="email" name="email" class="form-control" required>
-          </div>
-          <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" class="form-control" required>
-          </div>
-          <button type="submit" class="btn btn-primary">Login</button>
-        </form>
-        <div class="mt-3">
-          <% if (typeof message !=='undefined' ) { %>
-            <div class="alert alert-danger">
-              <%= message %>
-            </div>
-            <% } %>
-        </div>
-      </div>
-    </div>
+    <div class="card " style ="width: 20rem; margin: auto; margin-top: 50px; padding: 20px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+    <h3 style="text-align: center; margin-bottom: 20px;">Login</h3>
+    <a href="/register" style="display: block; margin-bottom: 10px;">Don't have an account? Register here</a>
+<form action="/login" method="POST">
+  <div class="form-group">
+    <label for="exampleInputEmail1">Email address</label>
+    <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
   </div>
-  <div class="">
-
+  <div class="form-group">
+    <label for="exampleInputPassword1">Password</label>
+    <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password" required minlength="6">
   </div>
-  <%-include('./parcials/footer.ejs') %>
+  <div class="form-group form-check">
+    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+    <label class="form-check-label" for="exampleCheck1">Check me out</label>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+  <a href="/" style="display: block; margin-bottom: 10px;">Go back to homepage</a>
+  <% if(typeof message!=="undefined" ){ %>
+      <p class ="alert"style="color: red">
+        <%=message %>
+      </p>
+      <% } %> 
+
+</form>
+</div>
+<script>
+     $(document).ready(function () {
+       setTimeout(function () {
+         $(".alert").fadeOut("slow");
+       }, 2000); // 2 seconds
+     });
+   </script>
+

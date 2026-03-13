@@ -15,6 +15,9 @@ user_router.set('view engine', 'ejs');
 user_router.set('views', "./View");
 
 
-user_router.get('/login', AdminAuth.isLogout, UserController.login); // Define the route for user login
-user_router.post('/login', UserController.loginUser); // Define the route for user login processing
+user_router.get('/login', AdminAuth.isLogout, UserController.login); 
+user_router.get('/register', AdminAuth.isLogout, UserController.register); // Define the route for user registration
+user_router.post('/login', UserController.loginUser); 
+user_router.post('/register', AdminAuth.isLogout, UserController.registerUser); // 
+//ine the route for user login processing
 module.exports = user_router;

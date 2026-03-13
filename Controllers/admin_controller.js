@@ -1,7 +1,8 @@
 const { log } = require('console');
 const express = require('express');
 const fs = require('fs'); 
-const Post = require('../Models/adminPost'); // Import the Post model
+const Post = require('../Models/adminPost'); 
+const nodemailer= require('nodemailer')// Import the Post model
 class AdminController {
   static async blog(req, res) {
     try {
@@ -29,11 +30,31 @@ class AdminController {
   static async addComment(req, res) {
     // Get comment data from request body
     const { name, email, comment, postId } = req.body;
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: "mvpatel2426@gmail.com",
+            pass: "agsd agir icuo szas"
+        }
+    });
+    const mailOptions = {
+        from: "mvpatel2426@gmail.com",
+        to: `${email}`,
+        subject: "New Comment on Blog Post",
+        text: `hey ${name} thanks for your comment on our blog post. We appreciate your feedback and will get back to you as soon as possible.`
+    };
     
     try {
       // Here you would typically save the comment to the database
       await Post.findByIdAndUpdate(postId, { $push: { "comments": { name, email, comment } } });
       console.log('New comment added:', { name, email, comment, postId });
+
+      transporter.sendMail(mailOptions).then(info => {
+            console.log("Email sent: " + info.response);
+        }).catch(error => {
+            console.error("Error sending email: ", error);
+        }); 
+
       res.status(201).json({success: true, message: 'Comment added successfully',postId:postId, name, email, comment });
     } catch (error) {
       console.error('Error adding comment:', error);
