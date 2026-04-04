@@ -17,7 +17,7 @@ user_router.set('views', "./View");
 
 user_router.get('/login', AdminAuth.isLogout, UserController.login); 
 user_router.get('/register', AdminAuth.isLogout, UserController.register); // Define the route for user registration
-user_router.post('/login', UserController.loginUser); 
-user_router.post('/register', AdminAuth.isLogout, UserController.registerUser); // 
-//ine the route for user login processing
+user_router.post('/login', AdminAuth.isLogout, UserController.loginUser); 
+user_router.post('/register', AdminAuth.isLogout, UserController.registerUser); 
+user_router.get('/profile', AdminAuth.isLogout, UserController.profile); // Define the route for user profile
 module.exports = user_router;

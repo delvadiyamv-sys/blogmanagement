@@ -1,6 +1,25 @@
 <%-include("./parcials/header.ejs") %>
+   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#!">Techno_infoSys</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#!">About_us</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#!">Contact_us</a></li>
+                   
+                    <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+
     <div class="card " style ="width: 20rem; margin: auto; margin-top: 50px; padding: 20px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
-    <h3 style="text-align: center; margin-bottom: 20px;">Login</h3>
+    <h3 style="text-align: center; margin-bottom: 20px;"><i class="fas fa-user "></i> Login</h3>
     <a href="/register" style="display: block; margin-bottom: 10px;">Don't have an account? Register here</a>
 <form action="/login" method="POST">
   <div class="form-group">
@@ -32,5 +51,6 @@
          $(".alert").fadeOut("slow");
        }, 2000); // 2 seconds
      });
+    
    </script>
 

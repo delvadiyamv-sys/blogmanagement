@@ -1,10 +1,12 @@
 const express = require('express');
-const User = require('../Models/userModel'); // Import the User model
+const User = require('../Models/userModel'); 
+// Import the User model
 class UserController {
   static login(req, res) {
     //
     res.render('login'); // Render the login view
   }
+  
 
   static async registerUser(req, res) {
     
@@ -44,7 +46,9 @@ class UserController {
         if (user.is_admin == 1) {
           res.redirect('/dashboard');
         } else {
-          res.redirect('/');
+         // Store user data in local storage
+
+          res.redirect('/profile'); // Redirect to profile page with user data if not an admin
         }
       } else {
         res.render('login', { message: 'Invalid email or password' }); // Render login with error if user not found
@@ -54,6 +58,20 @@ class UserController {
       res.status(500).send('Server error');
     }
   }
+ static async profile(req, res) {
+    try {
+      const userId = req.session.userId; // Get user ID from session
+      const user = await User.findById(userId); // Find user by ID
+      if (user) {
+        res.render('profile', { user: user }); // Render profile view with user data
+      } else {
+        res.status(404).send('User not found'); // Handle case where user is not found
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Server error'); // Handle server errors
+    }
+  } 
 }
 
 module.exports = UserController;

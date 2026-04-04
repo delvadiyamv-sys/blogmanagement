@@ -1,8 +1,8 @@
 const { log } = require('console');
 const express = require('express');
-const fs = require('fs'); 
-const Post = require('../Models/adminPost'); 
-const nodemailer= require('nodemailer')// Import the Post model
+const fs = require('fs');
+const Post = require('../Models/adminPost');
+const nodemailer = require('nodemailer')// Import the Post model
 class AdminController {
   static async blog(req, res) {
     try {
@@ -14,7 +14,7 @@ class AdminController {
     }
   }
   static async loadPost(req, res) {
-    
+
     const postId = req.params.id;
     try {
       const post = await Post.findOne({ _id: postId });
@@ -31,31 +31,46 @@ class AdminController {
     // Get comment data from request body
     const { name, email, comment, postId } = req.body;
     const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-            user: "mvpatel2426@gmail.com",
-            pass: "agsd agir icuo szas"
-        }
+      service: "gmail",
+      auth: {
+        user: "mvpatel2426@gmail.com",
+        pass: "agsd agir icuo szas"
+      }
     });
     const mailOptions = {
-        from: "mvpatel2426@gmail.com",
-        to: `${email}`,
-        subject: "New Comment on Blog Post",
-        text: `hey ${name} thanks for your comment on our blog post. We appreciate your feedback and will get back to you as soon as possible.`
+      from: "mvpatel2426@gmail.com",
+      to: `${email}`,
+      subject: "New Comment on Blog Post",
+      text: `hey ${name} thanks for your comment on our blog post. We appreciate your feedback and will get back to you as soon as possible.`
     };
-    
+    const mailOptions2 = {
+      from: "mvpatel2426@gmail.com",
+
+      to: "delvadiyamv@gmail.com",
+
+      subject: "New Comment on Blog Post",
+      text: `New comment on post with ID: ${postId}\nName: ${name}\nEmail: ${email}\nComment: ${comment}`
+    };
+
     try {
       // Here you would typically save the comment to the database
       await Post.findByIdAndUpdate(postId, { $push: { "comments": { name, email, comment } } });
       console.log('New comment added:', { name, email, comment, postId });
-
+      res.status(201).json({ success: true, message: 'Comment added successfully', postId: postId, name, email, comment });
       transporter.sendMail(mailOptions).then(info => {
-            console.log("Email sent: " + info.response);
-        }).catch(error => {
-            console.error("Error sending email: ", error);
-        }); 
+        console.log("Email sent: " + info.response);
+      }).catch(error => {
+        console.error("Error sending email: ", error);
+      });
+      transporter.sendMail(mailOptions2).then(info => {
+        console.log("Email sent: " + info.response);
+      }).catch(error => {
+        console.error("Error sending email: ", error);
+      });
+      
 
-      res.status(201).json({success: true, message: 'Comment added successfully',postId:postId, name, email, comment });
+
+
     } catch (error) {
       console.error('Error adding comment:', error);
       res.status(500).json({ success: false, message: 'Internal Server Error' });
@@ -88,9 +103,10 @@ class AdminController {
     try {
       const newPost = new Post({ title, content, image }); // Create a new Post instance
       await newPost.save();
-       res.send({success:true, message:'Post created successfully',_id:newPost._id, title:newPost.title, content:newPost.content, image:newPost.image
-        
-       });
+      res.send({
+        success: true, message: 'Post created successfully', _id: newPost._id, title: newPost.title, content: newPost.content, image: newPost.image
+
+      });
       //res.render('admin/createpost', { message: 'Post created successfully', post: newPost });
       //console.log('Post created successfully:', newPost);
     } catch (error) {
@@ -103,8 +119,8 @@ class AdminController {
       const id = req.body.id;
       await Post.deleteOne({ _id: id });
       const newPost = await Post.find({}); // Fetch all posts from the database
-      res.render('admin/dashboard', { success: true, message: 'Post was deleted successfully',newPost }); // Render the admin dashboard view with the fetched posts
-     
+      res.render('admin/dashboard', { success: true, message: 'Post was deleted successfully', newPost }); // Render the admin dashboard view with the fetched posts
+
     } catch (error) {
       console.error('Error deleting post:', error);
       res.status(500).send({ success: false, message: error.message });
@@ -124,45 +140,45 @@ class AdminController {
     }
   }
   static async updatePost(req, res) {
-    
- try {
-    var image;
-    if(req.file){
-      image = req.file.filename;
-      var oldPost = await Post.findById(req.params.id);
-      var oldImagePath = 'public/uploads/'+oldPost.image;
-      if (fs.existsSync(oldImagePath)) {
-        fs.unlinkSync(oldImagePath);
+
+    try {
+      var image;
+      if (req.file) {
+        image = req.file.filename;
+        var oldPost = await Post.findById(req.params.id);
+        var oldImagePath = 'public/uploads/' + oldPost.image;
+        if (fs.existsSync(oldImagePath)) {
+          fs.unlinkSync(oldImagePath);
+        }
+
+        await Post.findByIdAndUpdate(req.params.id, {
+          title: req.body.title,
+          content: req.body.content,
+          image: image
+
+        });
       }
-    
-      await Post.findByIdAndUpdate( req.params.id, {
-        title: req.body.title,
-        content: req.body.content,
-        image: image
-       
-      });
+
+
+      else {
+
+        await Post.findByIdAndUpdate(req.params.id, {
+          title: req.body.title,
+          content: req.body.content
+
+        });
+        image = null;
+      }
+
+      res.render('admin/dashboard', { message: 'Post updated successfully', newPost: await Post.find({}) });
+      console.log('Post updated successfully');
+    } catch (error) {
+      console.error('Error updating post:', error);
+      res.status(500).send('Internal Server Error');
+
     }
-      
-    
-    else{
-
-      await Post.findByIdAndUpdate( req.params.id, {
-        title: req.body.title,
-        content: req.body.content
-       
-      });
-      image = null;
-    }
-   
-  res.render('admin/dashboard', { message: 'Post updated successfully', newPost: await Post.find({}) });
-  console.log('Post updated successfully');
- } catch (error) {  
-  console.error('Error updating post:', error);
-  res.status(500).send('Internal Server Error');
-  
- }
 
 
-}
+  }
 }
 module.exports = AdminController;
