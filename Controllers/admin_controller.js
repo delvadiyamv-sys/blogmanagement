@@ -2,12 +2,15 @@ const { log } = require('console');
 const express = require('express');
 const fs = require('fs');
 const Post = require('../Models/adminPost');
+const User = require('../Models/userModel'); // Import the User model
 const nodemailer = require('nodemailer')// Import the Post model
 class AdminController {
   static async blog(req, res) {
     try {
+      const userId = req.session.userId; // Get user ID from session
+      const user = await User.findById(userId);
       const newPost = await Post.find({}); // Fetch all posts from the database
-      res.render('blog', { newPost }); // Render the blog view with the fetched posts
+      res.render('blog', { newPost, user },); // Render the blog view with the fetched posts
     } catch (error) {
       console.error('Error fetching blog posts:', error);
       res.status(500).send('Internal Server Error');

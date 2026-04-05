@@ -11,23 +11,31 @@
                     <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="#!">About_us</a></li>
                     <li class="nav-item"><a class="nav-link" href="#!">Contact_us</a></li>
-                   <% if(user){ %>
-
-
-                        <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
+                    <% if (user) { %>
+                        <li class="nav-item"><a class="nav-link" href="/profile">
+                            <i class="fa-solid fa-user"></i>
+                                <%= user.name %>
+                            </a></li>
                         <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
                         <% } else { %>
                             <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
-
                             <% } %>
-                    
+
 
                 </ul>
 
 
 
-            </div>
 
-            <script>
-            localStorage.setItem("user", "<%= user.name %>");
-            </script>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <h1>Profile </h1>
+        
+        <p>Name: <%= user.name %></p>
+        <p>Email: <%= user.email %></p>
+        <!-- Add more profile details as needed --> 
+    </div>
+
+            

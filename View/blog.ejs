@@ -12,7 +12,14 @@
                     <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="#!">About_us</a></li>
                     <li class="nav-item"><a class="nav-link" href="#!">Contact_us</a></li>
-                    
+                    <% if (user) { %>
+                        <li class="nav-item"><a class="nav-link" href="/profile">
+                               <i class="fa-solid fa-user"></i> <%= user.name %>
+                            </a></li>
+                        <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+                        <% } else { %>          
+                    <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+                    <% } %> 
                     
                 </ul>
             </div>
@@ -81,7 +88,8 @@
     
     
             
-    
+     
+
 
        
     
