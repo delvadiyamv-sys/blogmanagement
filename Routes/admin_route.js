@@ -43,6 +43,7 @@ admin_router.get('/dashboard', AdminAuth.isLogin, AdminController.dashboard);
 admin_router.get('/logout', AdminAuth.isLogin, AdminController.logout);
 admin_router.get('/Createposts', AdminAuth.isLogin, AdminController.Createposts); // Define the route for creating posts
 admin_router.post('/post', upload.single('image'), AdminAuth.isLogin, AdminController.createPost); // Define the route for processing post 
+admin_router.post('/ads', upload.single('image'), AdminAuth.isLogin, AdminController.createAd); // Define the route for creating ads
 admin_router.get('/editpost/:id', AdminAuth.isLogin, AdminController.editPost); // Define the route for editing posts
 admin_router.post('/updatepost/:id', upload.single('image'), AdminAuth.isLogin, AdminController.updatePost); // Define the route for updating posts
 

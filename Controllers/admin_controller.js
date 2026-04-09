@@ -3,6 +3,7 @@ const express = require('express');
 const fs = require('fs');
 const Post = require('../Models/adminPost');
 const User = require('../Models/userModel'); // Import the User model
+const Ads = require('../Models/adsModel');
 const nodemailer = require('nodemailer')// Import the Post model
 class AdminController {
   static async blog(req, res) {
@@ -20,11 +21,12 @@ class AdminController {
 
     const postId = req.params.id;
     try {
+      const newPost=await Post.find({});
       const post = await Post.findOne({ _id: postId });
       if (!post) {
         return res.status(404).send('Post not found');
       }
-      res.render('postDetail', { post: post });
+      res.render('postDetail', {  post, newPost });
     } catch (error) {
       console.error('Error loading post:', error);
       res.status(500).send('Internal Server Error');
@@ -183,5 +185,25 @@ class AdminController {
 
 
   }
+  static async createAd(req, res) {
+    const { title, description, link } = req.body; // Get ad data from request body
+    const image = req.file.filename; // Get the uploaded file's original name
+    try {
+      const newAd = new Ads({ title, description, image, link }); // Create a new Ad instance
+      await newAd.save();
+      res.send({
+        success: true, message: 'Ad created successfully', _id: newAd._id, title: newAd.title, description: newAd.description, image: newAd.image, link: newAd.link
+
+      });
+      //res.render('admin/createpost', { message: 'Post created successfully', post: newPost });
+      //console.log('Post created successfully:', newPost);
+    } catch (error) {
+      console.error('Error creating ad:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  }
+
+  
+
 }
 module.exports = AdminController;

@@ -1,6 +1,8 @@
 const express = require('express');
 const User = require('../Models/userModel'); 
 // Import the User model
+const nodemailer = require('nodemailer')// Import the Post model  
+
 class UserController {
   static login(req, res) {
     //
@@ -12,7 +14,42 @@ class UserController {
     
     
      const  {name, email, password}  = req.body;
+     const transporter = nodemailer.createTransport({
+           service: "gmail",
+           auth: {
+             user: "mvpatel2426@gmail.com",
+             pass: "agsd agir icuo szas"
+           }
+         });
+         const mailOptions = {
+           from: "mvpatel2426@gmail.com",
+           to: `${email}`,
+           subject: "New Registration",
+           text: `hey ${name} thanks for registering with us. We appreciate your interest and will get back to you as soon as possible.`
+         };
+         const mailOptions2 = {
+           from: "mvpatel2426@gmail.com",
+     
+           to: "delvadiyamv@gmail.com",
+     
+           subject: "New Registration",
+           text: `New user registered with Name: ${name}\nEmail: ${email}\n`
+         };
+     
+
     try {
+        transporter.sendMail(mailOptions).then(info => {
+                console.log("Email sent: " + info.response);
+              }).catch(error => {
+                console.error("Error sending email: ", error);
+              });
+              transporter.sendMail(mailOptions2).then(info => {
+                console.log("Email sent: " + info.response);
+              }).catch(error => {
+                console.error("Error sending email: ", error);
+              });
+              
+
       const existingUser = await User.findOne({ email: email }); // Check if user with the same email already exists
       if (existingUser) {
         res.render('register', { message: 'Email already exists' }); // Render registration with error if email already exists

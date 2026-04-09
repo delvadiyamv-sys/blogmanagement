@@ -51,14 +51,23 @@
                     <script src="/js/like-dislike.js"></script>
 
                 </article>
+
+
+                <!-- Bootstrap JS -->
+
+                <!-- Auto Show Modal -->
+
+
+
+
                 <!-- Comments section-->
                 <section class="mb-5">
                     <div class="card bg-light">
                         <div class="card-body">
                             <!-- Comment form-->
                             <h2 class="h4 my-4">Leave a Comment</h2>
-                            <form class="mb-4"><textarea class="form-control" rows="3" name="comment" required maxlength="100"
-                                    placeholder="Join the discussion and leave a comment!"></textarea>
+                            <form class="mb-4"><textarea class="form-control" rows="3" name="comment" required
+                                    maxlength="100" placeholder="Join the discussion and leave a comment!"></textarea>
                                 <input type="hidden" class="form-control my-4" name="postId" required
                                     value="<%= post._id %>">
                                 <input type="text" class="form-control my-4" name="name" value="" required
@@ -100,8 +109,49 @@
         </div>
 
         </section>
+        <!-- Modal -->
+        <div class="modal fade" id="adModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                    <!-- Close Button -->
+                    <div class="modal-header border-0">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <!-- Ad Content -->
+                    <%= newPost[0].title %>
+                        <div class="modal-body text-center">
+                            <% if(newPost[0].image) { %>
+
+                                <img class="img-fluid rounded mb-4 mb-lg-0" src="/uploads/<%= newPost[0].image %>" alt="..." />
+                        </div>
+                        <% } else { %>
+                            <img class="img-fluid rounded mb-4 mb-lg-0" src="https://dummyimage.com/600x400/000/fff"
+                                alt="..." />
+                </div>
+                <% } 
+
+                    %>
+                    <h5>Special Offer 🎉</h5>
+                    <p>Get 50% off on your first purchase!</p>
+                    <a href="#" class="btn btn-primary">Shop Now</a>
+            </div>
+
+        </div>
     </div>
+    </div>
+
+
     <!-- Side widgets-->
+    <script>
+        window.onload = function () {
+            setTimeout(function () {
+                var adModal = new bootstrap.Modal(document.getElementById('adModal'));
+                adModal.show();
+            }, 5000); // Show after 5 seconds   
+        };
+    </script>
     <div class="col-lg-4">
         <!-- Search widget-->
         <div class="card mb-4">
