@@ -1,8 +1,11 @@
 <%-include("./parcials/header.ejs") %>
+    <div class="container">
+        <img src="/uploads/logo-01.png" alt="Tech_InfoSys Banner" class="img-fluid mx-4 mt-4 mb-4">
+        <img src="/uploads/banner.jpg" alt="Tech_InfoSys Banner" class="img-fluid mx-4 mt-4 mb-4">
+    </div>
 
-
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top 0">
+        <div class="container ">
             <a class="navbar-brand" href="#!">Techno_infoSys</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -14,103 +17,209 @@
                     <li class="nav-item"><a class="nav-link" href="#!">Contact_us</a></li>
                     <% if (user) { %>
                         <li class="nav-item"><a class="nav-link" href="/profile">
-                               <i class="fa-solid fa-user"></i> <%= user.name %>
+                                <i class="fa-solid fa-user"></i>
+                                <%= user.name %>
                             </a></li>
                         <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
-                        <% } else { %>          
-                    <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
-                    <% } %> 
-                    
+                        <% } else { %>
+                            <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+                            <% } %>
+
                 </ul>
             </div>
         </div>
     </nav>
-      
 
-<!-- Modal -->
-<div class="modal fade" id="adModal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
+    <div id="carouselExampleInterval" class="carousel slide my-3 mx-3 mx-lg-3" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active" data-bs-interval="3000">
+                <img src="<%= newAd[0].image %>" class="d-block w-100" alt="..."
+                    style="height: 400px; object-fit: cover;">
+            </div>
+            <div class="carousel-item" data-bs-interval="2000">
+                <img src="<%= newAd[1].image %>" class="d-block w-100" alt="..."
+                    style="height: 400px; object-fit: cover;">
+            </div>
+            <div class="carousel-item">
+                <img src="<%= newAd[2].image %>" class="d-block w-100" alt="..."
+                    style="height: 400px; object-fit: cover;">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval"
+            data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval"
+            data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
 
-      <!-- Close Button -->
-      <div class="modal-header border-0">
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
 
-      <!-- Ad Content -->
-      <div class="modal-body text-center">
-         <h1><%= newPost[0].title %></h1>
-        <% if(newPost[0].image ) { %>
 
-                        <img class="img-fluid rounded mb-4 mb-lg-0"
-                            src="/uploads/<%= newPost[0].image %>" alt="..." /></div>
-                    <% }
-                    else { %>
-                        <img class="img-fluid rounded mb-4 mb-lg-0"
-                            src="https://dummyimage.com/600x400/000/fff" alt="..." /></div>
-                    <% } %>     
-        <h5>Special Offer 🎉</h5>
-        <p>Get 50% off on your first purchase!</p>
-        <a href="#" class="btn btn-primary">Shop Now</a>
-      </div>
+    <!-- Modal 0 -->
+    <div class="modal fade" id="adModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <!-- Close Button -->
+                <div class="modal-header border-0">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- Ad Content -->
+                <div class="modal-body text-center">
+                    <h1>
+                        <%= newAd[0].title %>
+                    </h1>
+                    <% if(newAd[0].image ) { %>
+
+                        <img class="img-fluid rounded mb-4 mb-lg-0" src="/uploads/<%= newAd[0].image %>"
+                            style="height: 400px; object-fit: cover;" />
+                </div>
+                <% } else { %>
+                    <img class="img-fluid rounded mb-4 mb-lg-0" src="https://dummyimage.com/600x400/000/fff"
+                        style="height: 400px; object-fit: cover;" alt="..." />
+            </div>
+            <% } %>
+                <h5>
+                    <%= newAd[0].description %>🎉
+                </h5>
+                <p>Get 50% off on your first purchase!</p>
+                <a href="https://www.instagram.com/pixelgraphic_design/" class="btn btn-link"><i
+                        class="fab fa-instagram"></i> follow instagram</a>
+        </div>
 
     </div>
-  </div>
-</div>
+    </div>
+    </div>
+    <!-- Modal 0 -->
+    <div class="modal fade" id="adModal1" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
 
-<!-- Bootstrap JS -->
+                <!-- Close Button -->
+                <div class="modal-header border-0">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
 
-<!-- Auto Show Modal -->
-<script>
-  window.onload = function () {
-    setTimeout(function () {
-      var adModal = new bootstrap.Modal(document.getElementById('adModal'));
-      adModal.show();
-    }, 5000); // Show after 5 seconds   
-  };
-</script>
+                <!-- Ad Content -->
+                <div class="modal-body text-center">
+                    <h1>
+                        <%= newAd[1].title %>
+                    </h1>
+                    <% if(newAd[1].image ) { %>
+
+                        <img class="img-fluid rounded mb-4 mb-lg-0" src="/uploads/<%= newAd[1].image %>" alt="..." />
+                </div>
+                <% } else { %>
+                    <img class="img-fluid rounded mb-4 mb-lg-0" src="https://dummyimage.com/600x400/000/fff"
+                        alt="..." />
+            </div>
+            <% } %>
+                <h5>
+                    <%= newAd[1].description %>🎉
+                </h5>
+                <p>Get 50% off on your first purchase!</p>
+                <a href="https://www.instagram.com/pixelgraphic_design/" class="btn btn-link"><i
+                        class="fab fa-instagram"></i> follow instagram</a>
+        </div>
+
+    </div>
+    </div>
+    </div>
+
+    <!-- Modal 02-->
+
+    </div>
+    </div>
+    <div class="modal fade" id="adModal2" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <!-- Close Button -->
+                <div class="modal-header border-0">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- Ad Content -->
+                <div class="modal-body text-center">
+                    <h1>
+                        <%= newAd[2].title %>
+                    </h1>
+                    <% if(newAd[2].image ) { %>
+
+                        <img class="img-fluid rounded mb-4 mb-lg-0" src="/uploads/<%= newAd[2].image %>" alt="..." />
+                </div>
+                <% } else { %>
+                    <img class="img-fluid rounded mb-4 mb-lg-0" src="https://dummyimage.com/600x400/000/fff"
+                        alt="..." />
+            </div>
+            <% } %>
+                <h5>
+                    <%= newAd[2].description %>🎉
+                </h5>
+                <p>Get 50% off on your first purchase!</p>
+                <a href="https://www.instagram.com/pixelgraphic_design/" class="btn btn-link"><i
+                        class="fab fa-instagram"></i> follow instagram</a>
+        </div>
+
+    </div>
+    </div>
+    </div>
+
+    <script>
 
 
+
+
+    </script>
 
 
     <% if( newPost.length> 0){
         for(let i =(newPost.length - 1); i >= 0; i--){ %>
-            <div class="container px-4 px-lg-5" id="runpost">
-                <!-- Heading Row-->
-                <div class="row gx-4 gx-lg-5 align-items-center my-5">
-                    <div class="col-lg-5">
-                       <% if(newPost[i].image ) { %>
+        <div class="container text-center align-items-center" id="runpost">
+            <!-- Heading Row-->
+            <div class="row gx-4 gx-lg-5 align-items-center my-5">
+                <div class="col-lg-5">
+                    <% if(newPost[i].image ) { %>
 
-                        <img class="img-fluid rounded mb-4 mb-lg-0"
-                            src="<%= newPost[i].image %>" alt="..." /></div>
-                    <% }
-                    else { %>
-                        <img class="img-fluid rounded mb-4 mb-lg-0"
-                            src="https://dummyimage.com/600x400/000/fff" alt="..." /></div>
-                    <% } %>
-                    <div class="col-lg-7">
-                        <h1 class="font-weight-light">
-                            <%= newPost[i].title %>
-                        </h1>
-                        <p>
-                            <%= newPost[i].content %>
-                        </p>
-                        <a class="btn btn-primary" href="/post/<%= newPost[i]._id %>">Read more</a>
-                    </div>
+                        <img class="img-fluid rounded mb-4 mb-lg-0" src="<%= newPost[i].image %>" alt="..." />
                 </div>
+                <% } else { %>
+                    <img class="img-fluid rounded mb-4 mb-lg-0" src="https://dummyimage.com/600x400/000/fff"
+                        alt="..." />
             </div>
-            <% } } else { %>
-                <h1>No posts available</h1>
-                <% } %>
-    
-                
-  <script>
-    var socket = io();
-    socket.on('newPost', function(data) {
-        console.log('New post received:', data);
-        var imageSrc = data.image ? data.image : 'https://dummyimage.com/600x400/000/fff';
-        var html = ``;
-           html+= `
+            <% } %>
+                <div class="col-lg-7">
+                    <h1 class="font-weight-light">
+                        <%= newPost[i].title %>
+                    </h1>
+                    <p>
+                        <%= newPost[i].content %>
+                    </p>
+                    <a class="btn btn-primary" href="/post/<%= newPost[i]._id %>">Read more</a>
+                </div>
+        </div>
+        </div>
+        <% } } else { %>
+            <h1>No posts available</h1>
+            <% } %>
+
+            
+        
+            
+
+
+                <script>
+                    var socket = io();
+                    socket.on('newPost', function (data) {
+                        console.log('New post received:', data);
+                        var imageSrc = data.image ? data.image : 'https://dummyimage.com/600x400/000/fff';
+                        var html = ``;
+                        html += `
         <div class="container px-4 px-lg-5" id="runpost">
                 <!-- Heading Row-->
                 <div class="row gx-4 gx-lg-5 align-items-center my-5            
@@ -130,16 +239,39 @@
                 </div>
             </div>
         `
-        $('#runpost').prepend(html);
-    });
-    
-    
-            
-     
+                        $('#runpost').prepend(html);
+                    });
 
 
-       
-    
-</script>   
 
-                    <%-include('./parcials/footer.ejs') %>
+
+
+
+
+
+                </script>
+                <script>
+                    $(".container").each(function(index){
+                        if((index+1)%5 === 0){
+                            $(this).after(`
+                            <div class="container text-center align-items-center" id="runpost">
+                                <!-- Heading Row-->
+                                <div class="row gx-4 gx-lg-5 align-items-center my-5">
+                                    <div class="col-lg-5">
+                                        <img class="img-fluid rounded mb-4 mb-lg-0" src="/uploads/logo-01.png" alt="..." />
+                                    </div>
+                                    
+                                    <div class="col-lg-7">
+                                        <h1 class="font-weight-light">Techno_infoSys</h1>
+                                        <p>Welcome to Techno_infoSys, your go-to destination for the latest tech news, reviews, and insights. Stay informed and ahead of the curve with us!</p>
+                                        <a class="btn btn-primary" href="/">Learn More</a>
+                                    </div>
+                                </div>
+                            </div>
+                            `);
+                        }
+                    })
+                    
+                </script>
+
+                <%-include('./parcials/footer.ejs') %>

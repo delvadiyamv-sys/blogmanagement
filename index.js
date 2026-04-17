@@ -52,7 +52,7 @@ socket.on('updateViews', async (postId) => {
 
 
 
-http.listen(3000, () => {
+http.listen(3000,  () => {
   console.log('my new blog node Server is running on http://localhost:3000');
 });
 

@@ -1,0 +1,88 @@
+<%- include("../parcials/adminheader.ejs")%>
+  <div id="content" class="p-4 p-md-5 pt-5">
+    <h2 class="mb-4">Dashboard</h2>
+    <div>
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Link</th>
+              <th>Image</th>
+              <th>Edit</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (newAd && newAd.length > 0) {
+              for (let i = 0; i < newAd.length; i++) { %>
+                <tr class="" style="width: max-content;">
+                  <td>
+                    <%= i + 1 %>
+                  </td>
+                  <td>
+                    <%= newAd[i].title %>
+                  </td>
+                  <td>
+                    <%= newAd[i].description %>
+                  </td>
+                  <td>
+                    <a href="<%= newAd[i].link %>" target="_blank" class="btn btn-link"><%= newAd[i].link %>            </a>
+                  </td>
+                  <td><img src="/uploads/<%= newAd[i].image %>" alt="" class="img-fluid"
+                      style="max-width: 100px; height: 50px;" /></td>
+                  <td>
+                    <form method="" action="/editpost/<%= newAd[i].id %>" class="deleteform">
+                      <input type="hidden" name="id" value="<%= newAd[i].id %>">
+                      <button type="submit" class="btn btn-primary editpost">Edit</button>
+                    </form>
+                    
+                  </td>
+                  <td>
+                    <form method="POST" action="/deletead" class="deleteform">
+                      <input type="hidden" name="id" value="<%= newAd[i].id %>">
+                      <button type="submit" class="btn btn-danger deletepost">Delete</button>
+                    </form>
+                  </td>
+                </tr>
+                <% } } else { %>
+                  <tr>
+                    <td><img class="img-fluid rounded mb-4 mb-lg-0" src="https://dummyimage.com/600x400/000/fff"
+                        alt="..." /></td>
+                    <td colspan="5" class="text-center">No ads found</td>
+                  </tr>
+                  <% } %>
+          </tbody>
+        </table>
+      
+        <p class="alert-success"  style="color: green;">  
+        </p>
+
+        </div>
+        <script>
+        $('.deleteform').on('submit', function(e) {
+          e.preventDefault(); // Prevent the default form submission
+
+          var form = $(this);
+          var id = form.find('input[name="id"]').val(); // Get the ID from the hidden input
+
+          $.ajax({
+            url: '/deletead', // The endpoint to handle the delete request
+            type: 'POST',
+            data: { id: id }, // Send the ID as data
+            success: function(response) {
+              alert('Ad deleted successfully!');
+              form.closest('tr').remove(); // Remove the corresponding table row
+            },
+            error: function(xhr, status, error) {
+              alert('Error deleting ad: ' + error);
+            }
+          });
+        });   
+        </script>
+      </div>
+    </div>
+        <%- include("../parcials/adminfooter.ejs")%>
+        

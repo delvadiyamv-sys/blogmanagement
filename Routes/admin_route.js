@@ -39,11 +39,14 @@ admin_router.post('/comment', AdminAuth.isLogout, AdminController.addComment);
 
 
 admin_router.post('/delete', AdminAuth.isLogin, AdminController.deletePost);
+admin_router.post('/deletead', AdminAuth.isLogin, AdminController.deleteAd);
 admin_router.get('/dashboard', AdminAuth.isLogin, AdminController.dashboard);
 admin_router.get('/logout', AdminAuth.isLogin, AdminController.logout);
 admin_router.get('/Createposts', AdminAuth.isLogin, AdminController.Createposts); // Define the route for creating posts
 admin_router.post('/post', upload.single('image'), AdminAuth.isLogin, AdminController.createPost); // Define the route for processing post 
 admin_router.post('/ads', upload.single('image'), AdminAuth.isLogin, AdminController.createAd); // Define the route for creating ads
+admin_router.get('/createad', AdminAuth.isLogin, AdminController.createAdPage); // Define the route for rendering the create ad page
+admin_router.get('/viewads', AdminAuth.isLogin, AdminController.viewAds); // Define the route for viewing ads
 admin_router.get('/editpost/:id', AdminAuth.isLogin, AdminController.editPost); // Define the route for editing posts
 admin_router.post('/updatepost/:id', upload.single('image'), AdminAuth.isLogin, AdminController.updatePost); // Define the route for updating posts
 

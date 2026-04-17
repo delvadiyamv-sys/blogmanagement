@@ -1,0 +1,50 @@
+<%- include("../parcials/adminheader.ejs")%>
+    <div id="content" class="p-4 p-md-5 pt-5">
+        <h1>Create Ad</h1>
+        <form action="/ads" method="POST" id="addAd" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Title</label>
+            <input type="text" class=" w-100" id="exampleFormControlInput   1" placeholder="Enter ad-title" name="title"
+            required>       
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Description</label>
+            <textarea class="form w-100" id="exampleFormControlTextarea1" placeholder="Enter ad description " rows="3"
+            name="description" required></textarea> 
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Image</label>
+            <input type="file" class=" w-100" id="exampleFormControlInput1" name="image" >  
+        </div>
+        <div>
+            <label for="exampleFormControlInput1" class="form-label">Link</label>
+            <input type="text" class=" w-100" id="exampleFormControlInput1" placeholder="Enter ad link " name="link" >  
+
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Create Ad</button>
+        </form>
+    </div>
+    <script>
+    $(document).ready(function() {
+        $('#addAd').on('submit', function(e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            var formData = new FormData(this); // Create a FormData object from the form
+
+            $.ajax({
+                url: '/ads', // The endpoint to handle the form submission
+                type: 'POST',
+                data: formData,
+                processData: false, // Important for file uploads
+                contentType: false, // Important for file uploads
+                success: function(response) {
+                    alert('Ad created successfully!');
+                    $('#addAd')[0].reset(); // Reset the form after successful submission
+                },
+                error: function(xhr, status, error) {
+                    alert('Error creating ad: ' + error);
+                }
+            });
+        }); 
+    });
+    </script>

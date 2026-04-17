@@ -10,8 +10,9 @@ class AdminController {
     try {
       const userId = req.session.userId; // Get user ID from session
       const user = await User.findById(userId);
-      const newPost = await Post.find({}); // Fetch all posts from the database
-      res.render('blog', { newPost, user },); // Render the blog view with the fetched posts
+      const newPost = await Post.find({});
+      const newAd = await Ads.find({}); // Fetch all ads from the database
+      res.render('blog', { newPost, user, newAd },); // Render the blog view with the fetched posts and ads
     } catch (error) {
       console.error('Error fetching blog posts:', error);
       res.status(500).send('Internal Server Error');
@@ -21,12 +22,12 @@ class AdminController {
 
     const postId = req.params.id;
     try {
-      const newPost=await Post.find({});
+      const newPost = await Post.find({});
       const post = await Post.findOne({ _id: postId });
       if (!post) {
         return res.status(404).send('Post not found');
       }
-      res.render('postDetail', {  post, newPost });
+      res.render('postDetail', { post, newPost });
     } catch (error) {
       console.error('Error loading post:', error);
       res.status(500).send('Internal Server Error');
@@ -72,7 +73,7 @@ class AdminController {
       }).catch(error => {
         console.error("Error sending email: ", error);
       });
-      
+
 
 
 
@@ -202,8 +203,32 @@ class AdminController {
       res.status(500).json({ message: 'Internal Server Error' });
     }
   }
+  static async createAdPage(req, res) {
+    res.render('admin/createad'); // Render the create ad view
+  }
+  static async viewAds(req, res) {
+    try {
+      const newAd = await Ads.find({}); // Fetch all ads from the database
+      res.render('admin/adList', { newAd: newAd }); // Render the ad list view with the fetched ads
+    } catch (error) {
+      console.error('Error fetching ads for ad list:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  } 
+  static async deleteAd(req, res) {
+    try {
+      const id = req.body.id;
+      await Ads.deleteOne({ _id: id });
+      const newAd = await Ads.find({}); // Fetch all ads from the database
+      res.render('admin/adList', { success: true, message: 'Ad was deleted successfully', newAd }); // Render the ad list view with the fetched ads
 
-  
+    } catch (error) {
+      console.error('Error deleting ad:', error);
+      res.status(500).send({ success: false, message: error.message });
+    }
+  } 
+
+
 
 }
 module.exports = AdminController;
