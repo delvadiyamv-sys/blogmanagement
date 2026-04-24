@@ -6,6 +6,19 @@
      <footer class="py-5 bg-dark">
             <div class="container px-4 px-lg-5"><p class="m-0 text-center text-white">Copyright &copy; Techno_info</p></div>
         </footer>
+        <footer class="fixed-bottom bg-white text-center p-2" id="footerAd" style="display:none;">
+    <img src="uploads/banner.jpg" class="img-fluid" alt="Footer Ad">
+  </footer>
+  <script>
+    // Show the footer ad after a delay (e.g., 5 seconds)
+    $(document).ready(function () {
+  setInterval(function () {
+    $("#footerAd").fadeIn(1000).delay(3000).fadeOut(1000);
+  }, 5000); // runs every 5 sec
+});
+
+  </script>
+
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->

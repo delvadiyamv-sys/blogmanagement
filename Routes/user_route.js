@@ -20,4 +20,6 @@ user_router.get('/register', AdminAuth.isLogout, UserController.register); // De
 user_router.post('/login', AdminAuth.isLogout, UserController.loginUser); 
 user_router.post('/register', AdminAuth.isLogout, UserController.registerUser); 
 user_router.get('/profile', AdminAuth.isLogout, UserController.profile); // Define the route for user profile
+user_router.get('/about', AdminAuth.isLogout, UserController.Aboutus); // Define the route for about us page    
+user_router.get('/contact', AdminAuth.isLogout, UserController.Contactus); // Define the route for contact us page
 module.exports = user_router;

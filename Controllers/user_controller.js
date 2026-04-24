@@ -1,5 +1,7 @@
 const express = require('express');
 const User = require('../Models/userModel'); 
+const Post= require('../Models/adminPost'); // Import the Post model
+const Ads = require('../Models/adsModel'); // Import the Ads model  
 // Import the User model
 const nodemailer = require('nodemailer')// Import the Post model  
 
@@ -109,6 +111,25 @@ class UserController {
       res.status(500).send('Server error'); // Handle server errors
     }
   } 
-}
+  static async Aboutus(req, res) {
+    try {
+           let newPost= await Post.find({}); // Fetch all posts from the database
+      let user=await User.findById(req.session.userId); // Fetch user data from the database
+       let ads = await Ads.find({}); // Fetch all ads from the database
+      res.render('about', { ads: ads, user: user, newPost: newPost }); // Render the about us view with ads data
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+  }
+  static async Contactus(req, res) {
+    try {
+      res.render('contact'); // Render the contact us view
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+    }
+  }
 
 module.exports = UserController;
